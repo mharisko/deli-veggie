@@ -1,0 +1,44 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  deliveggiegatewayapi:
+    image: deliveggiegatewayapi
+    container_name: 'deliveggie-gateway-api'
+    build:
+      context: .
+      dockerfile: src/Gateway/DeliVeggie.GatewayAPI/Dockerfile
+    ports:
+      - 5001:5001
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'deliveggie-products-rabbitmq'
+    volumes:
+      - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
+      - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+      RABBITMQ_DEFAULT_USER: deliveggie
+      RABBITMQ_DEFAULT_PASS: deliveggie
+    ports:
+      - 5672:5672
+      - 15672:15672
+  mongo:
+    image: mongo
+    restart: always
+    container_name: 'deliveggie-mongodb'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: deliveggie
+      MONGO_INITDB_ROOT_PASSWORD: deliveggie
+
+  mongo-express:
+    image: mongo-express
+    container_name: 'deliveggie-mongodb-ui'
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: deliveggie
+      ME_CONFIG_MONGODB_ADMINPASSWORD: deliveggie
