@@ -16,22 +16,22 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
     /// <summary>
     /// 
     /// </summary>
-    public class PriceReductionMessageBus : IPriceReductionMessageBus
+    internal class PriceReductionMessageBusService : IPriceReductionMessageBusService
     {
         private readonly IPriceReductionService priceReductionService;
         private readonly IBus messageBus;
-        private readonly ILogger<PriceReductionMessageBus> logger;
+        private readonly ILogger<PriceReductionMessageBusService> logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PriceReductionMessageBus"/> class.
+        /// Initializes a new instance of the <see cref="PriceReductionMessageBusService"/> class.
         /// </summary>
         /// <param name="priceReductionService">The price reduction service.</param>
         /// <param name="messageBus">The message bus.</param>
         /// <param name="logger">The logger.</param>
-        public PriceReductionMessageBus(
+        public PriceReductionMessageBusService(
             IPriceReductionService priceReductionService,
             IBus messageBus,
-            ILogger<PriceReductionMessageBus> logger)
+            ILogger<PriceReductionMessageBusService> logger)
         {
             this.priceReductionService = priceReductionService;
             this.messageBus = messageBus;
@@ -45,6 +45,8 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
         /// <returns></returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            logger.LogInformation("PriceReductionMessageBus Started.");
+
             var createTask = this.HandleCreateRequestAsync(cancellationToken);
             var getTask = this.HandleGetPriceReductionRequestAsync(cancellationToken);
             var deleteTask = this.HandleDeleteRequestAsync(cancellationToken);
@@ -54,6 +56,11 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
             return Task.WhenAll(createTask, getTask, deleteTask, updateTask, paginationTask);
         }
 
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            logger.LogInformation("PriceReductionMessageBus Stopping.");
+            return Task.CompletedTask;
+        }
 
         private Task HandleCreateRequestAsync(CancellationToken cancellationToken)
         {

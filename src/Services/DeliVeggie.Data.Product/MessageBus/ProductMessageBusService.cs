@@ -12,22 +12,22 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
     using EasyNetQ;
     using Microsoft.Extensions.Logging;
 
-    public class ProductMessageBus : IProductMessageBus
+    internal class ProductMessageBusService : IProductMessageBusService
     {
         private readonly IProductService productService;
         private readonly IBus messageBus;
-        private readonly ILogger<ProductMessageBus> logger;
+        private readonly ILogger<ProductMessageBusService> logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProductMessageBus" /> class.
+        /// Initializes a new instance of the <see cref="ProductMessageBusService" /> class.
         /// </summary>
         /// <param name="productService">The product service.</param>
         /// <param name="messageBus">The message bus.</param>
         /// <param name="logger">The logger.</param>
-        public ProductMessageBus(
+        public ProductMessageBusService(
             IProductService productService,
             IBus messageBus,
-            ILogger<ProductMessageBus> logger)
+            ILogger<ProductMessageBusService> logger)
         {
             this.productService = productService;
             this.messageBus = messageBus;
@@ -40,6 +40,8 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
         /// <param name="cancellationToken">The cancellation token.</param>
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            logger.LogInformation("ProductMessageBus Started.");
+
             var createTask = this.HandleCreateRequestAsync(cancellationToken);
             var getTask = this.HandleGetProductRequestAsync(cancellationToken);
             var deleteTask = this.HandleDeleteRequestAsync(cancellationToken);
@@ -48,6 +50,17 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
             var paginationTask = this.HandleGetProductsRequestAsync(cancellationToken);
 
             return Task.WhenAll(createTask, getTask, deleteTask, updateTask, withPriceTask, paginationTask);
+        }
+
+        /// <summary>
+        /// Stops the asynchronous.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            logger.LogInformation("ProductMessageBus Stopping.");
+            return Task.CompletedTask;
         }
 
         private Task HandleCreateRequestAsync(CancellationToken cancellationToken)

@@ -17,32 +17,27 @@ namespace DeliVeggie.Product.Service
         /// </summary>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public static IServiceCollection ConfigureServices(IConfigurationRoot config)
+        public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            var serviceCollection = new ServiceCollection();
-            RegisterRepository(serviceCollection, config);
+            //services.AddLogging();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IPriceReductionService, PriceReductionService>();
 
-            serviceCollection.AddTransient<IProductService, ProductService>();
-            serviceCollection.AddTransient<IPriceReductionService, PriceReductionService>();
+            services.AddSingleton<IPriceReductionMessageBusService, PriceReductionMessageBusService>();
+            services.AddSingleton<IProductMessageBusService, ProductMessageBusService>();
+            services.AddHostedService<ProductMessageBusService>();
+            services.AddHostedService<PriceReductionMessageBusService>();
 
-            serviceCollection.AddSingleton<IPriceReductionMessageBus, PriceReductionMessageBus>();
-            serviceCollection.AddSingleton<IProductMessageBus, ProductMessageBus>();
+            var rabbitMqConnection = configuration.GetConnectionString("RabbitMqConnectionString");
+            services.AddSingleton((service) => RabbitHutch.CreateBus(rabbitMqConnection));
 
-            var rabbitMqConnection = config.GetConnectionString("RabbitMqConnection");
-            serviceCollection.AddSingleton((service) => RabbitHutch.CreateBus(rabbitMqConnection));
-
-            return serviceCollection;
-        }
-
-        private static void RegisterRepository(ServiceCollection servicesCollection, IConfiguration configuration)
-        {
             var mongoConnection = configuration.GetConnectionString("MongoConnectionString");
-            servicesCollection.AddSingleton<IProductRepository>((service) =>
+            services.AddSingleton<IProductRepository>((service) =>
             {
                 return new ProductRepository(mongoConnection, "deli-veggie-products");
             });
 
-            servicesCollection.AddSingleton<IPriceReductionRepository>((service) =>
+            services.AddSingleton<IPriceReductionRepository>((service) =>
             {
                 return new PriceReductionRepository(mongoConnection, "deli-veggie-week-price");
             });

@@ -56,7 +56,7 @@ namespace DeliVeggie.GatewayAPI
             services.AddSingleton<IPriceReductionMessageBus, PriceReductionMessageBus>();
             services.AddSingleton<IProductMessageBus, ProductMessageBus>();
 
-            var rabbitMqConnection = Configuration.GetConnectionString("RabbitMqConnection");
+            var rabbitMqConnection = Configuration.GetConnectionString("RabbitMqConnectionString");
             services.AddSingleton((service) => RabbitHutch.CreateBus(rabbitMqConnection));
 
             services.AddOptions();
@@ -74,7 +74,7 @@ namespace DeliVeggie.GatewayAPI
 
             app.UseSwagger(options =>
             {
-                options.RouteTemplate = "projects/swagger/{documentname}/swagger.json";
+                options.RouteTemplate = "swagger/{documentname}/swagger.json";
                 options.PreSerializeFilters.Add((swaggerDoc, httpReq) => swaggerDoc.Servers = new System.Collections.Generic.List<OpenApiServer>
                   {
                     new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" }
@@ -87,9 +87,9 @@ namespace DeliVeggie.GatewayAPI
                         // build a swagger endpoint for each discovered API version
                         foreach (var description in versionDescriptionProvider.ApiVersionDescriptions)
                         {
-                            options.SwaggerEndpoint($"/projects/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                         }
-                        options.RoutePrefix = "projects/swagger";
+                        options.RoutePrefix = "swagger";
                     });
 
             app.UseHttpsRedirection();

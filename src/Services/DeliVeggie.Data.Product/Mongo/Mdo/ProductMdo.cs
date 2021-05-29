@@ -18,14 +18,6 @@ namespace DeliVeggie.Product.Service.Mongo.Mdo
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the entry date.
-        /// </summary>
-        /// <value>
-        /// The entry date.
-        /// </value>
-        public DateTime EntryDate { get; set; }
-
-        /// <summary>
         /// Gets or sets the price.
         /// </summary>
         /// <value>

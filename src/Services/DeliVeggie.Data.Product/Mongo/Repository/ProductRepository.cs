@@ -9,6 +9,7 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
     using DeliVeggie.Product.Service.Dto;
     using MongoDB.Driver;
     using DeliVeggie.Product.Service.Abstract.Repository;
+    using MongoDB.Bson.Serialization;
 
     public class ProductRepository : MongoRepository<ProductMdo, string>, IProductRepository
     {
@@ -20,7 +21,16 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
         public ProductRepository(string connectionString, string collectionName)
             : base(connectionString, collectionName)
         {
-
+            if (!BsonClassMap.IsClassMapRegistered(typeof(ProductDto)))
+            {
+                BsonClassMap.RegisterClassMap<ProductDto>(cm =>
+                {
+                    cm.AutoMap();
+                    cm.MapProperty(x => x.EntryDate)
+                      .SetElementName("CreatedDate");
+                    cm.SetIgnoreExtraElements(true);
+                });
+            }
         }
 
         /// <summary>
@@ -31,7 +41,6 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
         {
             var mdo = new ProductMdo
             {
-                EntryDate = product.EntryDate,
                 Name = product.Name,
                 Price = product.Price,
                 CreatedDate = DateTime.Now,
@@ -52,7 +61,6 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
 
             var update = Builders<ProductMdo>.Update
                             .Set(x => x.Name, product.Name)
-                            .Set(x => x.EntryDate, product.EntryDate)
                             .Set(x => x.Price, product.Price)
                             .Set(x => x.UpdatedDate, DateTime.Now);
 

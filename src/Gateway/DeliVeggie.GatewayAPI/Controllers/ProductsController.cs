@@ -4,6 +4,7 @@ namespace DeliVeggie.GatewayAPI.Controllers
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using DeliVeggie.Common.Infrastructure.Exceptions;
     using DeliVeggie.GatewayAPI.Models;
     using DeliVeggie.GatewayAPI.Services.Abstract;
     using DeliVeggie.GatewayAPI.Services.Dto;
@@ -44,6 +45,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
                 var products = await this.productService.GetProductsAsync(skip, limit);
                 return this.Ok(this.MapDtosToViewModel(products));
             }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
+            }
             catch (System.Exception ex)
             {
                 this.logger.LogError(ex, ex.Message);
@@ -69,6 +74,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
                 var product = await this.productService.GetProductAsync(productId);
                 return this.Ok(this.MapDtoToViewModel(product));
             }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
+            }
             catch (System.Exception ex)
             {
                 this.logger.LogError(ex, ex.Message);
@@ -82,8 +91,8 @@ namespace DeliVeggie.GatewayAPI.Controllers
         /// <param name="productId">The product identifier.</param>
         /// <param name="dayOfWeek">The day of week.</param>
         /// <returns></returns>
-        [HttpGet("{productId}")]
-        public async Task<IActionResult> GetProductWithPrice(string productId, [FromQuery] int dayOfWeek)
+        [HttpGet("{productId}/with-reduction/dayOfWeek")]
+        public async Task<IActionResult> GetProductWithPrice(string productId, int dayOfWeek)
         {
             try
             {
@@ -99,6 +108,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
 
                 var product = await this.productService.GetProductWithPriceAsync(productId, dayOfWeek);
                 return this.Ok(this.MapDtoToViewModel(product));
+            }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
             }
             catch (System.Exception ex)
             {
@@ -124,13 +137,16 @@ namespace DeliVeggie.GatewayAPI.Controllers
 
                 var productDto = new ProductDto
                 {
-                    EntryDate = productInput.EntryDate,
                     Name = productInput.Name,
                     Price = productInput.Price
                 };
 
                 await this.productService.AddNewProductAsync(productDto);
                 return this.NoContent();
+            }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
             }
             catch (System.Exception ex)
             {
@@ -157,13 +173,16 @@ namespace DeliVeggie.GatewayAPI.Controllers
 
                 var productDto = new ProductDto
                 {
-                    EntryDate = productInput.EntryDate,
                     Name = productInput.Name,
                     Price = productInput.Price
                 };
 
                 await this.productService.UpdateProductAsync(productId, productDto);
                 return this.NoContent();
+            }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
             }
             catch (System.Exception ex)
             {
@@ -189,6 +208,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
 
                 await this.productService.DeleteProductAsync(productId);
                 return this.NoContent();
+            }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
             }
             catch (System.Exception ex)
             {

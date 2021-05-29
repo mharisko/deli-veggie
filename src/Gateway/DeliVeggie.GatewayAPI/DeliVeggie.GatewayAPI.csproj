@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\DeliVeggie.Common.Entities\DeliVeggie.Common.MessageTypes.csproj" />
+    <ProjectReference Include="..\..\Common\DeliVeggie.Common.MessageTypes\DeliVeggie.Common.MessageTypes.csproj" />
     <ProjectReference Include="..\..\Common\DeliVeggie.Common.Infrastructure\DeliVeggie.Common.Infrastructure.csproj" />
   </ItemGroup>
 

@@ -8,6 +8,8 @@ namespace DeliVeggie.Product.Service
     using DeliVeggie.Product.Service.Abstract.MessageBus;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
     using NLog;
     using NLog.Extensions.Logging;
 
@@ -31,15 +33,7 @@ namespace DeliVeggie.Product.Service
 
             try
             {
-                var services = Startup.ConfigureServices(config);
-                var serviceProvider = services.BuildServiceProvider();
-
-                await Task.WhenAll(
-                    serviceProvider.GetService<IPriceReductionMessageBus>().StartAsync(cancellationTokenSource.Token),
-                    serviceProvider.GetService<IProductMessageBus>().StartAsync(cancellationTokenSource.Token)
-                    );
-
-                Console.Read();
+                await CreateHostBuilder(args, config).Build().RunAsync();
             }
             catch (Exception ex)
             {
@@ -49,8 +43,22 @@ namespace DeliVeggie.Product.Service
             finally
             {
                 cancellationTokenSource.Cancel(true);
-                NLog.LogManager.Shutdown();
+                LogManager.Shutdown();
             }
         }
+
+        static IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration) =>
+           Host.CreateDefaultBuilder(args)
+             .ConfigureHostConfiguration(builder => builder.AddConfiguration(configuration))
+                    .ConfigureLogging(loggingBuilder =>
+                    {
+                        loggingBuilder.ClearProviders()
+                        .AddNLog()
+                        .SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Debug);
+                    })
+                    .ConfigureServices((services) =>
+                    {
+                        Startup.ConfigureServices(services, configuration);
+                    });
     }
 }

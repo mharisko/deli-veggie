@@ -4,6 +4,7 @@ namespace DeliVeggie.GatewayAPI.Controllers
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using DeliVeggie.Common.Infrastructure.Exceptions;
     using DeliVeggie.GatewayAPI.Models;
     using DeliVeggie.GatewayAPI.Services.Abstract;
     using DeliVeggie.GatewayAPI.Services.Dto;
@@ -42,6 +43,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
                 var priceReductionDtos = await this.priceReductionService.GetPriceReductionsAsync();
                 return this.Ok(this.MapDtosToViewModel(priceReductionDtos));
             }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
+            }
             catch (System.Exception ex)
             {
                 this.logger.LogError(ex, ex.Message);
@@ -66,6 +71,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
 
                 var priceReductionDto = await this.priceReductionService.GetPriceReductionAsync(dayOfWeek);
                 return this.Ok(this.MapDtoToViewModel(priceReductionDto));
+            }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
             }
             catch (System.Exception ex)
             {
@@ -98,6 +107,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
                 await this.priceReductionService.AddPriceReductionAsync(priceReductionDto);
                 return this.NoContent();
             }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
+            }
             catch (System.Exception ex)
             {
                 this.logger.LogError(ex, ex.Message);
@@ -129,6 +142,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
                 await this.priceReductionService.UpdatePriceReductionAsync(dayOfWeek, priceReductionDto);
                 return this.NoContent();
             }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
+            }
             catch (System.Exception ex)
             {
                 this.logger.LogError(ex, ex.Message);
@@ -153,6 +170,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
 
                 await this.priceReductionService.DeletePriceReductionAsync(dayOfWeek);
                 return this.NoContent();
+            }
+            catch (HttpException ex) when (ex.StatusCode < 500)
+            {
+                return StatusCode(ex.StatusCode);
             }
             catch (System.Exception ex)
             {
