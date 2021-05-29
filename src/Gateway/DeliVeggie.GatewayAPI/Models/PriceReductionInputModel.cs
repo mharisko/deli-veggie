@@ -1,12 +1,6 @@
-
-namespace DeliVeggie.Common.MessageTypes.PriceReductionMessage
+﻿namespace DeliVeggie.GatewayAPI.Models
 {
-    using System.ComponentModel.DataAnnotations;
-
-    /// <summary>
-    /// Price reduction document.
-    /// </summary>
-    public class PriceReductionMessageBase
+    public class PriceReductionInputModel
     {
         /// <summary>
         /// Gets or sets the day of week.
@@ -14,8 +8,6 @@ namespace DeliVeggie.Common.MessageTypes.PriceReductionMessage
         /// <value>
         /// The day of week.
         /// </value>
-        [Required]
-        [Range(minimum: 1, maximum: 7)]
         public int DayOfWeek { get; set; }
 
         /// <summary>
@@ -24,7 +16,6 @@ namespace DeliVeggie.Common.MessageTypes.PriceReductionMessage
         /// <value>
         /// The reduction.
         /// </value>
-        [Range(minimum: 0, maximum: 100)]
         public double Reduction { get; set; }
     }
 }

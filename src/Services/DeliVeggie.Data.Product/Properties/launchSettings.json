@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DeliVeggie.Product.Service": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

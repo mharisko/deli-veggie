@@ -1,11 +1,11 @@
 ﻿
-namespace DeliVeggie.Product.Service.Domain
+namespace DeliVeggie.GatewayAPI.Services.Implementation
 {
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
-    using DeliVeggie.Product.Service.Abstract.Domain;
-    using DeliVeggie.Product.Service.Abstract.Repository;
-    using DeliVeggie.Product.Service.Dto;
+    using DeliVeggie.GatewayAPI.Services.Abstract;
+    using DeliVeggie.GatewayAPI.Services.Dto;
 
     /// <summary>
     /// 
@@ -13,19 +13,15 @@ namespace DeliVeggie.Product.Service.Domain
     /// <seealso cref="IProductService" />
     public class ProductService : IProductService
     {
-        private readonly IProductRepository productRepository;
-        private readonly IPriceReductionService priceReductionService;
+        private readonly IProductMessageBus productMessageBus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductService" /> class.
         /// </summary>
-        /// <param name="productRepository">The product repository.</param>
-        /// <param name="priceReductionService">The price reduction service.</param>
-        public ProductService(IProductRepository productRepository,
-            IPriceReductionService priceReductionService)
+        /// <param name="productMessageBus">The product message bus.</param>
+        public ProductService(IProductMessageBus productMessageBus)
         {
-            this.productRepository = productRepository;
-            this.priceReductionService = priceReductionService;
+            this.productMessageBus = productMessageBus;
         }
 
         /// <summary>
@@ -35,7 +31,7 @@ namespace DeliVeggie.Product.Service.Domain
         /// <returns>Asynchronous operation.</returns>
         public Task AddNewProductAsync(ProductDto product)
         {
-            return this.productRepository.AddNewProductAsync(product);
+            return this.productMessageBus.AddNewProductAsync(product, CancellationToken.None);
         }
 
         /// <summary>
@@ -45,7 +41,7 @@ namespace DeliVeggie.Product.Service.Domain
         /// <returns>Asynchronous operation.</returns>
         public Task DeleteProductAsync(string productId)
         {
-            return this.productRepository.DeleteProductAsync(productId);
+            return this.productMessageBus.DeleteProductAsync(productId, CancellationToken.None);
         }
 
         /// <summary>
@@ -55,7 +51,7 @@ namespace DeliVeggie.Product.Service.Domain
         /// <returns>Asynchronous operation.</returns>
         public Task<ProductDto> GetProductAsync(string productId)
         {
-            return this.productRepository.GetProductAsync(productId);
+            return this.productMessageBus.GetProductAsync(productId, CancellationToken.None);
         }
 
         /// <summary>
@@ -64,13 +60,9 @@ namespace DeliVeggie.Product.Service.Domain
         /// <param name="productId">The product identifier.</param>
         /// <param name="dayOfWeek">The day of week.</param>
         /// <returns></returns>
-        public async Task<ProductDto> GetProductWithPriceAsync(string productId, int dayOfWeek)
+        public Task<ProductDto> GetProductWithPriceAsync(string productId, int dayOfWeek)
         {
-            var reduction = await this.priceReductionService.GetPriceReductionAsync(dayOfWeek);
-            var product = await this.productRepository.GetProductAsync(productId);
-            product.Price -= product.Price * reduction.Reduction;
-
-            return product;
+            return this.productMessageBus.GetProductWithPriceAsync(productId, dayOfWeek, CancellationToken.None);
         }
 
         /// <summary>
@@ -81,7 +73,7 @@ namespace DeliVeggie.Product.Service.Domain
         /// <returns>Asynchronous operation.</returns>
         public Task<IEnumerable<ProductDto>> GetProductsAsync(int skip, int limit)
         {
-            return this.productRepository.GetProductsAsync(skip, limit);
+            return this.productMessageBus.GetProductsAsync(skip, limit, CancellationToken.None);
         }
 
         /// <summary>
@@ -92,7 +84,7 @@ namespace DeliVeggie.Product.Service.Domain
         /// <returns>Asynchronous operation.</returns>
         public Task UpdateProductAsync(string productId, ProductDto product)
         {
-            return this.productRepository.UpdateProductAsync(productId, product);
+            return this.productMessageBus.UpdateProductAsync(productId, product, CancellationToken.None);
         }
     }
 }

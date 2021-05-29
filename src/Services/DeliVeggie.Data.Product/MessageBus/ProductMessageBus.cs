@@ -38,7 +38,7 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
         /// Starts the asynchronous.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             var createTask = this.HandleCreateRequestAsync(cancellationToken);
             var getTask = this.HandleGetProductRequestAsync(cancellationToken);
@@ -47,42 +47,44 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
             var withPriceTask = this.HandleGetProductWithPriceRequestAsync(cancellationToken);
             var paginationTask = this.HandleGetProductsRequestAsync(cancellationToken);
 
-            await Task.WhenAll(createTask, getTask, deleteTask, updateTask, withPriceTask, paginationTask);
+            return Task.WhenAll(createTask, getTask, deleteTask, updateTask, withPriceTask, paginationTask);
         }
 
-        private async Task HandleCreateRequestAsync(CancellationToken cancellationToken)
+        private Task HandleCreateRequestAsync(CancellationToken cancellationToken)
         {
-            await this.messageBus
-                          .Rpc
-                          .RespondAsync<ProductCreateRequestMessage, ProductCreateResponseMessage>(async request =>
-                          {
-                              var statusCode = 200;
-                              try
-                              {
-                                  if (request == null || !RequestValidationHelper.IsValid(request))
-                                  {
-                                      statusCode = 400;
-                                  }
+            return this.messageBus
+                            .Rpc
+                            .RespondAsync<ProductCreateRequestMessage, ProductCreateResponseMessage>(async request =>
+                            {
+                                var statusCode = 200;
+                                try
+                                {
+                                    if (request == null || !RequestValidationHelper.IsValid(request))
+                                    {
+                                        statusCode = 400;
+                                    }
+                                    else
+                                    {
+                                        var productToAdd = this.MapCreateRequestToDto(request);
+                                        await this.productService.AddNewProductAsync(productToAdd);
+                                        this.logger.LogInformation($"{productToAdd.Name} successfully created.");
+                                    }
 
-                                  var productToAdd = this.MapCreateRequestToDto(request);
-                                  await this.productService.AddNewProductAsync(productToAdd);
-                                  this.logger.LogInformation($"{productToAdd.Name} successfully created.");
+                                }
+                                catch (System.Exception ex)
+                                {
+                                    this.logger.LogError(ex, "Error when creating a product");
+                                    statusCode = 500;
+                                }
 
-                              }
-                              catch (System.Exception ex)
-                              {
-                                  this.logger.LogError(ex, "Error when creating a product");
-                                  statusCode = 500;
-                              }
+                                return new ProductCreateResponseMessage { StatusCode = statusCode };
 
-                              return new ProductCreateResponseMessage { StatusCode = statusCode };
-
-                          }, cancellationToken);
+                            }, cancellationToken);
         }
 
-        private async Task HandleUpdateRequestAsync(CancellationToken cancellationToken)
+        private Task HandleUpdateRequestAsync(CancellationToken cancellationToken)
         {
-            await this.messageBus
+            return this.messageBus
                           .Rpc
                           .RespondAsync<ProductUpdateRequestMessage, ProductUpdateResponseMessage>(async request =>
                           {
@@ -93,11 +95,12 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                                   {
                                       statusCode = 400;
                                   }
-
-                                  var productToUpdate = this.MapCreateRequestToDto(request);
-                                  await this.productService.UpdateProductAsync(productToUpdate.Id, productToUpdate);
-                                  this.logger.LogInformation($"{productToUpdate.Name} successfully updated.");
-
+                                  else
+                                  {
+                                      var productToUpdate = this.MapCreateRequestToDto(request);
+                                      await this.productService.UpdateProductAsync(productToUpdate.Id, productToUpdate);
+                                      this.logger.LogInformation($"{productToUpdate.Name} successfully updated.");
+                                  }
                               }
                               catch (System.Exception ex)
                               {
@@ -110,9 +113,9 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                           }, cancellationToken);
         }
 
-        private async Task HandleDeleteRequestAsync(CancellationToken cancellationToken)
+        private Task HandleDeleteRequestAsync(CancellationToken cancellationToken)
         {
-            await this.messageBus
+            return this.messageBus
                           .Rpc
                           .RespondAsync<ProductDeleteRequestMessage, ProductDeleteResponseMessage>(async request =>
                           {
@@ -123,10 +126,11 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                                   {
                                       statusCode = 400;
                                   }
-
-                                  await this.productService.DeleteProductAsync(request.ProductId);
-                                  this.logger.LogInformation($"Product {request.ProductId} successfully Deleted.");
-
+                                  else
+                                  {
+                                      await this.productService.DeleteProductAsync(request.ProductId);
+                                      this.logger.LogInformation($"Product {request.ProductId} successfully Deleted.");
+                                  }
                               }
                               catch (System.Exception ex)
                               {
@@ -139,9 +143,9 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                           }, cancellationToken);
         }
 
-        private async Task HandleGetProductRequestAsync(CancellationToken cancellationToken)
+        private Task HandleGetProductRequestAsync(CancellationToken cancellationToken)
         {
-            await this.messageBus
+            return this.messageBus
                           .Rpc
                           .RespondAsync<ProductGetRequestMessage, ProductGetResponseMessage>(async request =>
                           {
@@ -152,14 +156,16 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                                   {
                                       statusCode = 400;
                                   }
-
-                                  var productDto = await this.productService.GetProductAsync(request.ProductId);
-                                  if (productDto != null)
+                                  else
                                   {
-                                      return this.MapDtoToResponseMessage(productDto);
-                                  }
+                                      var productDto = await this.productService.GetProductAsync(request.ProductId);
+                                      if (productDto != null)
+                                      {
+                                          return this.MapDtoToResponseMessage(productDto);
+                                      }
 
-                                  statusCode = 404;
+                                      statusCode = 404;
+                                  }
                               }
                               catch (System.Exception ex)
                               {
@@ -172,9 +178,9 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                           }, cancellationToken);
         }
 
-        private async Task HandleGetProductWithPriceRequestAsync(CancellationToken cancellationToken)
+        private Task HandleGetProductWithPriceRequestAsync(CancellationToken cancellationToken)
         {
-            await this.messageBus
+            return this.messageBus
                           .Rpc
                           .RespondAsync<ProductWithPriceRequestMessage, ProductWithPriceResponseMessage>(async request =>
                           {
@@ -185,14 +191,16 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                                   {
                                       statusCode = 400;
                                   }
-
-                                  var productDto = await this.productService.GetProductWithPriceAsync(request.ProductId, request.DayOfWeek);
-                                  if (productDto != null)
+                                  else
                                   {
-                                      return this.MapDtoToPriceResponseMessage(productDto);
-                                  }
+                                      var productDto = await this.productService.GetProductWithPriceAsync(request.ProductId, request.DayOfWeek);
+                                      if (productDto != null)
+                                      {
+                                          return this.MapDtoToPriceResponseMessage(productDto);
+                                      }
 
-                                  statusCode = 404;
+                                      statusCode = 404;
+                                  }
                               }
                               catch (System.Exception ex)
                               {
@@ -205,9 +213,9 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                           }, cancellationToken);
         }
 
-        private async Task HandleGetProductsRequestAsync(CancellationToken cancellationToken)
+        private Task HandleGetProductsRequestAsync(CancellationToken cancellationToken)
         {
-            await this.messageBus
+            return this.messageBus
                           .Rpc
                           .RespondAsync<ProductsPaginationRequestMessage, ProductsPaginationResponseMessage>(async request =>
                           {
@@ -262,7 +270,7 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
             return new ProductsPaginationResponseMessage
             {
                 Products = products
-                            .Select(x => MapDtoToResponseMessage(x))
+                            .Select(x => this.MapDtoToResponseMessage(x))
                             .ToList()
             };
         }

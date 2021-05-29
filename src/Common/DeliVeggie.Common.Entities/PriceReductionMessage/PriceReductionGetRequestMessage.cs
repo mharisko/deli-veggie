@@ -8,6 +8,6 @@
         /// <value>
         /// The day of week.
         /// </value>
-        public string DayOfWeek { get; set; }
+        public int DayOfWeek { get; set; }
     }
 }

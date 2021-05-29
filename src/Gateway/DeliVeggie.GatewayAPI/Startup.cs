@@ -1,15 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
+using DeliVeggie.GatewayAPI.Services.Abstract;
+using DeliVeggie.GatewayAPI.Services.Implementation;
+using EasyNetQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace DeliVeggie.GatewayAPI
 {
@@ -25,16 +26,71 @@ namespace DeliVeggie.GatewayAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+               .AddJsonOptions(options =>
+               {
+                   options.JsonSerializerOptions.IgnoreNullValues = true;
+                   options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+               });
+
+            services.AddVersionedApiExplorer(
+                       options =>
+                       {
+                           options.SubstituteApiVersionInUrl = true;
+                           options.GroupNameFormat = "'v'VVVV";
+                           options.SubstitutionFormat = "VVVV";
+                       });
+
+            services.AddApiVersioning(option =>
+            {
+                option.AssumeDefaultVersionWhenUnspecified = true;
+                option.ReportApiVersions = true;
+            });
+
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            services.AddSwaggerGen();
+
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IPriceReductionService, PriceReductionService>();
+
+            services.AddSingleton<IPriceReductionMessageBus, PriceReductionMessageBus>();
+            services.AddSingleton<IProductMessageBus, ProductMessageBus>();
+
+            var rabbitMqConnection = Configuration.GetConnectionString("RabbitMqConnection");
+            services.AddSingleton((service) => RabbitHutch.CreateBus(rabbitMqConnection));
+
+            services.AddOptions();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IApiVersionDescriptionProvider versionDescriptionProvider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = "projects/swagger/{documentname}/swagger.json";
+                options.PreSerializeFilters.Add((swaggerDoc, httpReq) => swaggerDoc.Servers = new System.Collections.Generic.List<OpenApiServer>
+                  {
+                    new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" }
+                  });
+            });
+
+            app.UseSwaggerUI(
+                    options =>
+                    {
+                        // build a swagger endpoint for each discovered API version
+                        foreach (var description in versionDescriptionProvider.ApiVersionDescriptions)
+                        {
+                            options.SwaggerEndpoint($"/projects/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                        }
+                        options.RoutePrefix = "projects/swagger";
+                    });
 
             app.UseHttpsRedirection();
 

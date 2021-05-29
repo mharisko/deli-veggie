@@ -2,6 +2,6 @@
 {
     public class PriceReductionDeleteRequestMessage
     {
-        public string DayOfWeek { get; set; }
+        public int DayOfWeek { get; set; }
     }
 }
