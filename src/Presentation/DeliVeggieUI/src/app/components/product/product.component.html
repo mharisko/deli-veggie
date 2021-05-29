@@ -1,0 +1,16 @@
+<ngx-spinner bdColor="rgba(0,0,0,0.09)" size="default" color="#1060bf" type="square-jelly-box" [fullScreen]="true">
+  <p style="color: white"> Requesting... </p>
+</ngx-spinner>
+
+
+<div class="card mt-5" style="width: 18rem;" *ngIf="product">
+  <div class="card-header">
+    Product
+  </div>
+  <div class="card-body">
+    <div>Id: {{product.id}}</div>
+    <div>Name: {{product.name}}</div>
+    <div>Entry date: {{product.entryDate | date }}</div>
+    <div>Price: {{product.price | currency}}</div>
+  </div>
+</div>

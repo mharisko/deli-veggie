@@ -1,0 +1,44 @@
+<ngx-spinner bdColor="rgba(0,0,0,0.09)" size="default" color="#1060bf" type="square-jelly-box" [fullScreen]="true">
+  <p style="color: white"> Requesting... </p>
+</ngx-spinner>
+
+<div class="container">
+  <div class="card mt-3 shadow rounded">
+    <div class="card-header bg-transparent">
+      <h4>Articles</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Title</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="products?.length != 0">
+          <tr *ngFor="let product of products; let i = index">
+            <td>{{i}}</td>
+            <td><a [routerLink]="'/products/'+product.id" target="_blank"></a> {{ product.name }}</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="products?.length == 0">
+          <tr>
+            <td colspan="3" class="no-data-available">No data!</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-between p-2">
+        <ngb-pagination [collectionSize]="totalProducts" [(page)]="page" [maxSize]="1" (pageChange)="getProducts()">
+          <ng-template ngbPaginationPrevious>Prev</ng-template>
+          <ng-template ngbPaginationNext>Next</ng-template>
+        </ngb-pagination>
+
+        <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="getProducts()">
+          <option [ngValue]="10">10 items per page</option>
+          <option [ngValue]="25">25 items per page</option>
+          <option [ngValue]="50">50 items per page</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
