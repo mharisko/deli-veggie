@@ -42,14 +42,22 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
         {
             logger.LogInformation("ProductMessageBus Started.");
 
-            var createTask = this.HandleCreateRequestAsync(cancellationToken);
-            var getTask = this.HandleGetProductRequestAsync(cancellationToken);
-            var deleteTask = this.HandleDeleteRequestAsync(cancellationToken);
-            var updateTask = this.HandleUpdateRequestAsync(cancellationToken);
-            var withPriceTask = this.HandleGetProductWithPriceRequestAsync(cancellationToken);
-            var paginationTask = this.HandleGetProductsRequestAsync(cancellationToken);
+            try
+            {
+                var createTask = this.HandleCreateRequestAsync(cancellationToken);
+                var getTask = this.HandleGetProductRequestAsync(cancellationToken);
+                var deleteTask = this.HandleDeleteRequestAsync(cancellationToken);
+                var updateTask = this.HandleUpdateRequestAsync(cancellationToken);
+                var withPriceTask = this.HandleGetProductWithPriceRequestAsync(cancellationToken);
+                var paginationTask = this.HandleGetProductsRequestAsync(cancellationToken);
 
-            return Task.WhenAll(createTask, getTask, deleteTask, updateTask, withPriceTask, paginationTask);
+                return Task.WhenAll(createTask, getTask, deleteTask, updateTask, withPriceTask, paginationTask);
+            }
+            catch (System.Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+                throw;
+            }           
         }
 
         /// <summary>

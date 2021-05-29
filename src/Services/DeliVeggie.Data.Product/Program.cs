@@ -3,11 +3,8 @@ namespace DeliVeggie.Product.Service
 {
     using System;
     using System.IO;
-    using System.Threading;
     using System.Threading.Tasks;
-    using DeliVeggie.Product.Service.Abstract.MessageBus;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using NLog;
@@ -28,21 +25,16 @@ namespace DeliVeggie.Product.Service
             var logger = LogManager.Setup()
                                   .SetupExtensions(ext => ext.RegisterConfigSettings(config))
                                   .GetCurrentClassLogger();
-
-            var cancellationTokenSource = new CancellationTokenSource();
-
             try
             {
                 await CreateHostBuilder(args, config).Build().RunAsync();
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Stopped program because of exception");
-                throw;
+                logger.Error(ex, ex.Message);
             }
             finally
             {
-                cancellationTokenSource.Cancel(true);
                 LogManager.Shutdown();
             }
         }

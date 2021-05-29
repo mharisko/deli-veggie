@@ -3,11 +3,16 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
-COPY ["src/Services/DeliVeggie.Data.Product/DeliVeggie.Product.Service.csproj", "src/Services/DeliVeggie.Data.Product/"]
-COPY ["src/Common/DeliVeggie.Common.MessageTypes/DeliVeggie.Common.MessageTypes.csproj", "src/Common/DeliVeggie.Common.MessageTypes/"]
-RUN dotnet restore "src/Services/DeliVeggie.Data.Product/DeliVeggie.Product.Service.csproj"
-COPY . .
-WORKDIR "/src/src/Services/DeliVeggie.Data.Product"
+COPY ["src/Services/DeliVeggie.Data.Product/DeliVeggie.Product.Service.csproj", "Services/DeliVeggie.Data.Product/"]
+COPY ["src/Common/DeliVeggie.Common.MessageTypes/DeliVeggie.Common.MessageTypes.csproj", "Common/DeliVeggie.Common.MessageTypes/"]
+COPY ["src/Common/DeliVeggie.Common.Infrastructure/DeliVeggie.Common.Infrastructure.csproj", "Common/DeliVeggie.Common.Infrastructure/"]
+RUN dotnet restore "Services/DeliVeggie.Data.Product/DeliVeggie.Product.Service.csproj"
+
+COPY ["src/Services/DeliVeggie.Data.Product/", "Services/DeliVeggie.Data.Product/"]
+COPY ["src/Common/DeliVeggie.Common.MessageTypes/", "Common/DeliVeggie.Common.MessageTypes/"]
+COPY ["src/Common/DeliVeggie.Common.Infrastructure/", "Common/DeliVeggie.Common.Infrastructure/"]
+
+WORKDIR "/src/Services/DeliVeggie.Data.Product"
 RUN dotnet build "DeliVeggie.Product.Service.csproj" -c Release -o /app/build
 
 FROM build AS publish
