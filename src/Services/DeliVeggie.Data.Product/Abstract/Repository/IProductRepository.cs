@@ -20,14 +20,14 @@ namespace DeliVeggie.Product.Service.Abstract.Repository
         /// <param name="productId">The product identifier.</param>
         /// <param name="product">The product.</param>
         /// <returns></returns>
-        Task UpdateProductAsync(string productId, ProductDto product);
+        Task<long> UpdateProductAsync(string productId, ProductDto product);
 
         /// <summary>
         /// Deletes the product asynchronous.
         /// </summary>
         /// <param name="productId">The product identifier.</param>
         /// <returns></returns>
-        Task DeleteProductAsync(string productId);
+        Task<long> DeleteProductAsync(string productId);
 
         /// <summary>
         /// Gets the product asynchronous.
@@ -43,5 +43,11 @@ namespace DeliVeggie.Product.Service.Abstract.Repository
         /// <param name="limit">The limit.</param>
         /// <returns></returns>
         Task<IEnumerable<ProductDto>> GetProductsAsync(int skip, int limit);
+
+        /// <summary>
+        /// Gets the count asynchronous.
+        /// </summary>
+        /// <returns></returns>
+        Task<long> GetCountAsync();
     }
 }

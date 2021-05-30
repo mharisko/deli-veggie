@@ -54,7 +54,7 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
         /// </summary>
         /// <param name="productId">The product identifier.</param>
         /// <param name="product">The product.</param>
-        public async Task UpdateProductAsync(string productId, ProductDto product)
+        public async Task<long> UpdateProductAsync(string productId, ProductDto product)
         {
             var filter = Builders<ProductMdo>.Filter
                         .Eq(x => x.Id, productId);
@@ -64,19 +64,21 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
                             .Set(x => x.Price, product.Price)
                             .Set(x => x.UpdatedDate, DateTime.Now);
 
-            await this.Collection.UpdateOneAsync(filter, update);
+            var updateResult = await this.Collection.UpdateOneAsync(filter, update);
+            return updateResult.ModifiedCount;
         }
 
         /// <summary>
         /// Deletes the product asynchronous.
         /// </summary>
         /// <param name="productId">The product identifier.</param>
-        public async Task DeleteProductAsync(string productId)
+        public async Task<long> DeleteProductAsync(string productId)
         {
             var filter = Builders<ProductMdo>.Filter
                       .Eq(x => x.Id, productId);
 
-            await this.Collection.DeleteOneAsync(filter);
+            var deleteResult = await this.Collection.DeleteOneAsync(filter);
+            return deleteResult.DeletedCount;
         }
 
         /// <summary>
@@ -115,6 +117,15 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
 
             var documents = await this.Collection.FindAsync(Builders<ProductMdo>.Filter.Empty, options);
             return await documents.ToListAsync();
+        }
+
+        /// <summary>
+        /// Gets the count asynchronous.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<long> GetCountAsync()
+        {
+            return await this.Collection.EstimatedDocumentCountAsync();
         }
     }
 }

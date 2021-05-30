@@ -94,5 +94,14 @@ namespace DeliVeggie.Product.Service.Domain
         {
             return this.productRepository.UpdateProductAsync(productId, product);
         }
+
+        /// <summary>
+        /// Gets the count asynchronous.
+        /// </summary>
+        /// <returns></returns>
+        public Task<long> GetCountAsync()
+        {
+            return this.productRepository.GetCountAsync();
+        }
     }
 }

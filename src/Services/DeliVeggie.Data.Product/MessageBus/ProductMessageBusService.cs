@@ -57,7 +57,7 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
             {
                 logger.LogError(ex, ex.Message);
                 throw;
-            }           
+            }
         }
 
         /// <summary>
@@ -245,11 +245,16 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                               {
                                   var skip = request == null ? 0 : request.Skip;
                                   var limit = request == null ? 20 : request.Limit;
+                                  long? recordsTotal = null;
 
                                   var productDtos = await this.productService.GetProductsAsync(skip, limit);
+                                  if (skip == 0)
+                                  {
+                                      recordsTotal = await this.productService.GetCountAsync();
+                                  }
                                   if (productDtos?.Count() > 0)
                                   {
-                                      return this.MapDtoToResponseMessage(productDtos);
+                                      return this.MapDtoToResponseMessage(productDtos, recordsTotal);
                                   }
 
                                   statusCode = 404;
@@ -286,13 +291,14 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
             };
         }
 
-        private ProductsPaginationResponseMessage MapDtoToResponseMessage(IEnumerable<ProductDto> products)
+        private ProductsPaginationResponseMessage MapDtoToResponseMessage(IEnumerable<ProductDto> products, long? recordsTotal)
         {
             return new ProductsPaginationResponseMessage
             {
                 Products = products
                             .Select(x => this.MapDtoToResponseMessage(x))
-                            .ToList()
+                            .ToList(),
+                RecordsTotal = recordsTotal
             };
         }
 

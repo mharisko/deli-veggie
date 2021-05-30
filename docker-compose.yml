@@ -8,13 +8,14 @@ services:
       context: .
       dockerfile: src/Gateway/DeliVeggie.GatewayAPI/Dockerfile
     environment:
-      ConnectionStrings__RabbitMqConnectionString: host=localhost:5672;publisherConfirms=true;timeout=10
+      ConnectionStrings__RabbitMqConnectionString: host=rabbitmq:5672;publisherConfirms=true;timeout=10
     ports:
       - 5062:80
+      - 5063:80
     depends_on:
       - rabbitmq
-    networks:
-      - deliveggie-network
+    # networks:
+    #   - deliveggie-network
   deliveggie-data-service:
     image: deliveggie-data-service
     container_name: "deliveggie-data-service"
@@ -22,32 +23,34 @@ services:
       context: .
       dockerfile: src/Services/DeliVeggie.Data.Product/Dockerfile
     environment:
-      ConnectionStrings__MongoConnectionString: mongodb://localhost:27017/deli-veggie
-      ConnectionStrings__RabbitMqConnectionString: host=localhost:5672;publisherConfirms=true;timeout=10
+      ConnectionStrings__MongoConnectionString: mongodb://mongo/deli-veggie
+      ConnectionStrings__RabbitMqConnectionString: host=rabbitmq:5672;publisherConfirms=true;timeout=10
     depends_on:
       - rabbitmq
       - mongo
-    networks:
-      - deliveggie-network
+    # networks:
+    #   - deliveggie-network
+
+  deliveggie-product-ui:
+    image: deliveggie-product-ui
+    container_name: "deliveggie-product-ui"
+    build:
+      context: .
+      dockerfile: src/Presentation/DeliVeggieUI/Dockerfile
+    ports:
+      - 5070:80
+    depends_on:
+      - deliveggie-gateway-api
+    # networks:
+    #   - deliveggie-network
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: "deliveggie-products-rabbitmq"
-    volumes:
-      - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
-      - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
-      - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
-    # environment:
-    #   RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
-    #   RABBITMQ_DEFAULT_USER: deliveggie
-    #   RABBITMQ_DEFAULT_PASS: deliveggie
-    expose:
-      - 5672
-      - 15672
     ports:
       - 5672:5672
       - 15672:15672
-    networks:
-      - deliveggie-network
+    # networks:
+    #   - deliveggie-network
   mongo:
     image: mongo
     restart: always
@@ -57,8 +60,8 @@ services:
     # environment:
     # MONGO_INITDB_ROOT_USERNAME: deliveggie
     # MONGO_INITDB_ROOT_PASSWORD: deliveggie
-    networks:
-      - deliveggie-network
+    # networks:
+    #   - deliveggie-network
   mongo-express:
     image: mongo-express
     container_name: "deliveggie-mongodb-ui"
@@ -68,9 +71,9 @@ services:
     # environment:
     # ME_CONFIG_MONGODB_ADMINUSERNAME: deliveggie
     # ME_CONFIG_MONGODB_ADMINPASSWORD: deliveggie
-    networks:
-      - deliveggie-network
+    # networks:
+    #   - deliveggie-network
 
-networks:
-  deliveggie-network:
-    driver: bridge
+# networks:
+#   deliveggie-network:
+#     driver: bridge

@@ -72,6 +72,13 @@ namespace DeliVeggie.GatewayAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(policy =>
+            {
+                policy.WithOrigins("http://localhost:5070")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
+
             app.UseSwagger(options =>
             {
                 options.RouteTemplate = "swagger/{documentname}/swagger.json";

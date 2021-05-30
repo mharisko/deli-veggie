@@ -51,5 +51,11 @@ namespace DeliVeggie.Product.Service.Abstract.Domain
         /// <param name="limit">The limit.</param>
         /// <returns></returns>
         Task<IEnumerable<ProductDto>> GetProductsAsync(int skip, int limit);
+
+        /// <summary>
+        /// Gets the count asynchronous.
+        /// </summary>
+        /// <returns></returns>
+        Task<long> GetCountAsync();
     }
 }

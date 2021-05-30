@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeliVeggie.GatewayAPI", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeliVeggie.Product.Service", "src\Services\DeliVeggie.Data.Product\DeliVeggie.Product.Service.csproj", "{CD26C754-8D41-4034-8894-7EB160277202}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliVeggie.Common.Infrastructure", "src\Common\DeliVeggie.Common.Infrastructure\DeliVeggie.Common.Infrastructure.csproj", "{983015B4-91CE-49E6-845E-06D5B10CBB46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeliVeggie.Common.Infrastructure", "src\Common\DeliVeggie.Common.Infrastructure\DeliVeggie.Common.Infrastructure.csproj", "{983015B4-91CE-49E6-845E-06D5B10CBB46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliVeggie.Product.Service.Test", "test\DeliVeggie.Product.Service.Test\DeliVeggie.Product.Service.Test.csproj", "{64D06114-8F20-428C-A572-0B9530E90D08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{983015B4-91CE-49E6-845E-06D5B10CBB46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{983015B4-91CE-49E6-845E-06D5B10CBB46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{983015B4-91CE-49E6-845E-06D5B10CBB46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64D06114-8F20-428C-A572-0B9530E90D08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64D06114-8F20-428C-A572-0B9530E90D08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64D06114-8F20-428C-A572-0B9530E90D08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64D06114-8F20-428C-A572-0B9530E90D08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,7 +12,6 @@ import { finalize } from 'rxjs/operators';
 })
 export class ProductsComponent implements OnInit {
 
-
   public page = 1;
   public pageSize = 10;
   public totalProducts = 0;

@@ -1,6 +1,7 @@
 ﻿
 namespace DeliVeggie.GatewayAPI.Services.Abstract
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -61,6 +62,6 @@ namespace DeliVeggie.GatewayAPI.Services.Abstract
         /// <param name="limit">The limit.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        Task<IEnumerable<ProductDto>> GetProductsAsync(int skip, int limit, CancellationToken cancellationToken);
+        Task<(IEnumerable<ProductDto> Products, long? RecordsTotal)> GetProductsAsync(int skip, int limit, CancellationToken cancellationToken);
     }
 }

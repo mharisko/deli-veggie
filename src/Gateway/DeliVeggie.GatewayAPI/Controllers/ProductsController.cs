@@ -42,8 +42,12 @@ namespace DeliVeggie.GatewayAPI.Controllers
         {
             try
             {
-                var products = await this.productService.GetProductsAsync(skip, limit);
-                return this.Ok(this.MapDtosToViewModel(products));
+                var paginationResult = await this.productService.GetProductsAsync(skip, limit);
+                return this.Ok(new
+                {
+                    Data = this.MapDtosToViewModel(paginationResult.Products),
+                    paginationResult.RecordsTotal
+                });
             }
             catch (HttpException ex) when (ex.StatusCode < 500)
             {

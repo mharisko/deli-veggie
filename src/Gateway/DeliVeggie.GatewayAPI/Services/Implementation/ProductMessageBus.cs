@@ -130,7 +130,7 @@ namespace DeliVeggie.GatewayAPI.Services.Implementation
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="HttpException">Invalid response from data service</exception>
-        public async Task<IEnumerable<ProductDto>> GetProductsAsync(int skip, int limit, CancellationToken cancellationToken)
+        public async Task<(IEnumerable<ProductDto> Products, long? RecordsTotal)> GetProductsAsync(int skip, int limit, CancellationToken cancellationToken)
         {
             var message = new ProductsPaginationRequestMessage { Skip = skip, Limit = limit };
             var response = await this.messageBus
@@ -142,7 +142,7 @@ namespace DeliVeggie.GatewayAPI.Services.Implementation
                 throw new HttpException((System.Net.HttpStatusCode)response.StatusCode, "Invalid response from data service");
             }
 
-            return this.MapMessageToDto(response.Products);
+            return (this.MapMessageToDto(response.Products), response.RecordsTotal);
         }
 
         private ProductDto MapMessageToDto(ProductMessageBase response)

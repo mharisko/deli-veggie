@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-api
+  labels:
+    app: deliveggie-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: gateway-api
+  template:
+    metadata:
+      labels:
+        app: deliveggie-gateway
+        service: gateway-api
+    spec:
+      containers:
+        - name: deliveggie-gateway
+          image: localhost:5000/deliveggie-gateway-api:latest
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-api
+  labels:
+    app: deliveggie-gateway
+    service: gateway-api
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5062
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: gateway-api
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: deliveggie-gateway-ingress
+  labels:
+    name: deliveggie-gateway-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway-api
+                port:
+                  number: 5062
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+  labels:
+    app: deliveggie-product-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: product-service
+  template:
+    metadata:
+      labels:
+        app: deliveggie-product-service
+        service: product-service
+    spec:
+      containers:
+        - name:  deliveggie-product-service
+          image: localhost:5000/deliveggie-gateway-api:latest
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+              protocol: TCP

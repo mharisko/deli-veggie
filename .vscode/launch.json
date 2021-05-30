@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
@@ -15,7 +16,8 @@
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5061"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -34,6 +36,20 @@
             "netCore": {
                 "appProject": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/DeliVeggie.GatewayAPI.csproj"
             }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/src/Presentation/DeliVeggieUI"
+        },
+        {
+            "type": "chrome",
+            "request": "attach",
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }

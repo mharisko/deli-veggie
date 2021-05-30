@@ -50,6 +50,6 @@ namespace DeliVeggie.GatewayAPI.Services.Abstract
         /// <param name="skip">The skip.</param>
         /// <param name="limit">The limit.</param>
         /// <returns></returns>
-        Task<IEnumerable<ProductDto>> GetProductsAsync(int skip, int limit);
+        Task<(IEnumerable<ProductDto> Products, long? RecordsTotal)> GetProductsAsync(int skip, int limit);
     }
 }

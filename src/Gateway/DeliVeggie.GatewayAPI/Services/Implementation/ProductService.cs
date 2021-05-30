@@ -70,8 +70,10 @@ namespace DeliVeggie.GatewayAPI.Services.Implementation
         /// </summary>
         /// <param name="skip">The skip.</param>
         /// <param name="limit">The limit.</param>
-        /// <returns>Asynchronous operation.</returns>
-        public Task<IEnumerable<ProductDto>> GetProductsAsync(int skip, int limit)
+        /// <returns>
+        /// Asynchronous operation.
+        /// </returns>
+        public Task<(IEnumerable<ProductDto> Products, long? RecordsTotal)> GetProductsAsync(int skip, int limit)
         {
             return this.productMessageBus.GetProductsAsync(skip, limit, CancellationToken.None);
         }

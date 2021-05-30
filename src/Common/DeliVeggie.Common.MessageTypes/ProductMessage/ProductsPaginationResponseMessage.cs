@@ -13,6 +13,14 @@ namespace DeliVeggie.Common.MessageTypes.ProductMessage
         public IEnumerable<ProductMessageBase> Products { get; set; }
 
         /// <summary>
+        /// Gets or sets the records total.
+        /// </summary>
+        /// <value>
+        /// The records total.
+        /// </value>
+        public long? RecordsTotal { get; set; }
+
+        /// <summary>
         /// Gets or sets the status code.
         /// </summary>
         /// <value>
