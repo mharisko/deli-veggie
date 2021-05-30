@@ -1,23 +1,42 @@
 {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}/src/Presentation/DeliVeggieUI"
+        },
+        {
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-service",
+            "program": "${workspaceFolder}/src/Services/DeliVeggie.Product.Service/bin/Debug/netcoreapp3.1/DeliVeggie.Product.Service.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
         {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/Services/DeliVeggie.Data.Product/bin/Debug/netcoreapp3.1/DeliVeggie.Data.Product.dll",
+            "preLaunchTask": "build-gateway",
+            "program": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/bin/Debug/netcoreapp3.1/DeliVeggie.GatewayAPI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/Services/DeliVeggie.Data.Product",
+            "cwd": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:5062"
+                "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -27,29 +46,15 @@
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
-        },
+        }
+    ],
+    "compounds": [
         {
-            "name": "Docker .NET Core Launch",
-            "type": "docker",
-            "request": "launch",
-            "preLaunchTask": "docker-run: debug",
-            "netCore": {
-                "appProject": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/DeliVeggie.GatewayAPI.csproj"
-            }
-        },
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:5070",
-            "webRoot": "${workspaceFolder}/src/Presentation/DeliVeggieUI"
-        },
-        {
-            "type": "chrome",
-            "request": "attach",
-            "name": "Attach to Chrome",
-            "port": 9222,
-            "webRoot": "${workspaceFolder}"
+            "name": "Both Console & Web API",
+            "configurations": [
+                ".NET Core Launch (console)",
+                ".NET Core Launch (web)"
+            ]
         }
     ]
 }

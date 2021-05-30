@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Services\DeliVeggie.Data.Product\DeliVeggie.Product.Service.csproj" />
+    <ProjectReference Include="..\..\src\Services\DeliVeggie.Product.Service\DeliVeggie.Product.Service.csproj" />
   </ItemGroup>
 
 </Project>

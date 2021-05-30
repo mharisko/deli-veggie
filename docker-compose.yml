@@ -21,7 +21,7 @@ services:
     container_name: "deliveggie-product-service"
     build:
       context: .
-      dockerfile: src/Services/DeliVeggie.Data.Product/Dockerfile
+      dockerfile: src/Services/DeliVeggie.Product.Service/Dockerfile
     environment:
       ConnectionStrings__MongoConnectionString: mongodb://mongo/deli-veggie
       ConnectionStrings__RabbitMqConnectionString: host=rabbitmq:5672;publisherConfirms=true;timeout=10

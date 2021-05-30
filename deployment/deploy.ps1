@@ -8,7 +8,7 @@ docker build -f .\src\Gateway\DeliVeggie.GatewayAPI\Dockerfile -t deliveggie-gat
 docker tag deliveggie-gateway-api localhost:5000/deliveggie-gateway-api:latest
 docker push localhost:5000/deliveggie-gateway-api:latest
 
-docker build -f .\src\Services\DeliVeggie.Data.Product\Dockerfile -t  deliveggie-product-service:latest .
+docker build -f .\src\Services\DeliVeggie.Product.Service\Dockerfile -t  deliveggie-product-service:latest .
 docker tag deliveggie-product-service localhost:5000/deliveggie-product-service:latest
 docker push localhost:5000/deliveggie-product-service:latest
 

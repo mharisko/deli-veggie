@@ -2,12 +2,24 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build-gateway",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Services/DeliVeggie.Data.Product/DeliVeggie.Data.Product.csproj",
+                "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/DeliVeggie.GatewayAPI.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-service",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Services/DeliVeggie.Product.Service/DeliVeggie.Product.Service.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +31,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/src/Services/DeliVeggie.Data.Product/DeliVeggie.Data.Product.csproj",
+                "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/DeliVeggie.GatewayAPI.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,67 +44,11 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/src/Services/DeliVeggie.Data.Product/DeliVeggie.Data.Product.csproj",
+                "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/DeliVeggie.GatewayAPI.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
-        },
-        {
-            "type": "docker-build",
-            "label": "docker-build: debug",
-            "dependsOn": [
-                "build"
-            ],
-            "dockerBuild": {
-                "tag": "deliveggie:dev",
-                "target": "base",
-                "dockerfile": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/Dockerfile",
-                "context": "${workspaceFolder}",
-                "pull": true
-            },
-            "netCore": {
-                "appProject": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/DeliVeggie.GatewayAPI.csproj"
-            }
-        },
-        {
-            "type": "docker-build",
-            "label": "docker-build: release",
-            "dependsOn": [
-                "build"
-            ],
-            "dockerBuild": {
-                "tag": "deliveggie:latest",
-                "dockerfile": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/Dockerfile",
-                "context": "${workspaceFolder}",
-                "pull": true
-            },
-            "netCore": {
-                "appProject": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/DeliVeggie.GatewayAPI.csproj"
-            }
-        },
-        {
-            "type": "docker-run",
-            "label": "docker-run: debug",
-            "dependsOn": [
-                "docker-build: debug"
-            ],
-            "dockerRun": {},
-            "netCore": {
-                "appProject": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/DeliVeggie.GatewayAPI.csproj",
-                "enableDebugging": true
-            }
-        },
-        {
-            "type": "docker-run",
-            "label": "docker-run: release",
-            "dependsOn": [
-                "docker-build: release"
-            ],
-            "dockerRun": {},
-            "netCore": {
-                "appProject": "${workspaceFolder}/src/Gateway/DeliVeggie.GatewayAPI/DeliVeggie.GatewayAPI.csproj"
-            }
         }
     ]
 }
