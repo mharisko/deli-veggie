@@ -5,6 +5,9 @@ namespace DeliVeggie.GatewayAPI.Services.Abstract
     using System.Threading.Tasks;
     using Dto;
 
+    /// <summary>
+    /// Product service.
+    /// </summary>
     public interface IProductService
     {
         /// <summary>

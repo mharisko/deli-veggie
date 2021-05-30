@@ -11,6 +11,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
+    /// <summary>
+    /// Products controller.
+    /// </summary>
+    /// <seealso cref="ControllerBase" />
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/products")]

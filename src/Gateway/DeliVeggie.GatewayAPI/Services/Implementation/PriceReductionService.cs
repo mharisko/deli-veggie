@@ -8,7 +8,7 @@ namespace DeliVeggie.GatewayAPI.Services.Implementation
     using DeliVeggie.GatewayAPI.Services.Dto;
 
     /// <summary>
-    /// 
+    /// Price reduction service.
     /// </summary>
     /// <seealso cref="IPriceReductionService" />
     public class PriceReductionService : IPriceReductionService
@@ -24,6 +24,10 @@ namespace DeliVeggie.GatewayAPI.Services.Implementation
             this.priceReductionMessageBus = priceReductionMessageBus;
         }
 
+        /// <summary>
+        /// Adds price reduction async.
+        /// </summary>
+        /// <param name="priceReduction">The price reduction.</param>
         public Task AddPriceReductionAsync(PriceReductionDto priceReduction)
         {
             return this.priceReductionMessageBus.AddPriceReductionAsync(priceReduction, CancellationToken.None);

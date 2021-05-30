@@ -6,11 +6,11 @@ namespace DeliVeggie.GatewayAPI.Services.Abstract
     using System.Threading;
     using System.Threading.Tasks;
     using DeliVeggie.GatewayAPI.Services.Dto;
-
+    
     /// <summary>
-    /// 
+    /// Product message bus.
     /// </summary>
-    /// <seealso cref="DeliVeggie.GatewayAPI.Services.Abstract.MessageBus.IMessageBus" />
+    /// <seealso cref="IMessageBus" />
     public interface IProductMessageBus : IMessageBus
     {
         /// <summary>

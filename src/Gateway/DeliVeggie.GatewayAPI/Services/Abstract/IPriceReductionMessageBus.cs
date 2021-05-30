@@ -7,8 +7,9 @@ namespace DeliVeggie.GatewayAPI.Services.Abstract
     using DeliVeggie.GatewayAPI.Services.Dto;
 
     /// <summary>
-    /// 
+    /// Price reduction message bus.
     /// </summary>
+    /// <seealso cref="IMessageBus" />
     public interface IPriceReductionMessageBus : IMessageBus
     {
         /// <summary>

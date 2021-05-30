@@ -11,6 +11,10 @@ namespace DeliVeggie.GatewayAPI.Services.Implementation
     using DeliVeggie.GatewayAPI.Services.Dto;
     using EasyNetQ;
 
+    /// <summary>
+    /// Product message bus.
+    /// </summary>
+    /// <seealso cref="IProductMessageBus" />
     public class ProductMessageBus : IProductMessageBus
     {
         private readonly IBus messageBus;

@@ -8,7 +8,7 @@ namespace DeliVeggie.GatewayAPI.Services.Implementation
     using DeliVeggie.GatewayAPI.Services.Dto;
 
     /// <summary>
-    /// 
+    /// Product service.
     /// </summary>
     /// <seealso cref="IProductService" />
     public class ProductService : IProductService

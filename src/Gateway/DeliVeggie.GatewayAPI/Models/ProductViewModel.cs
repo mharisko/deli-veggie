@@ -2,6 +2,10 @@
 
 namespace DeliVeggie.GatewayAPI.Models
 {
+    /// <summary>
+    /// Product view model.
+    /// </summary>
+    /// <seealso cref="ProductInputModel" />
     public class ProductViewModel : ProductInputModel
     {
         /// <summary>

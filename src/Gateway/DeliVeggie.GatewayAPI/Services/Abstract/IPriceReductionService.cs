@@ -5,6 +5,9 @@ namespace DeliVeggie.GatewayAPI.Services.Abstract
     using System.Threading.Tasks;
     using Dto;
 
+    /// <summary>
+    /// Price reduction service.
+    /// </summary>
     public interface IPriceReductionService
     {
         /// <summary>

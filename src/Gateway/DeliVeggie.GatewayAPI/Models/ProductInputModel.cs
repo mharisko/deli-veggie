@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DeliVeggie.GatewayAPI.Models
 {
+    /// <summary>
+    /// Product input model.
+    /// </summary>
     public class ProductInputModel
     {
         /// <summary>

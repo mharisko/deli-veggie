@@ -12,8 +12,9 @@ namespace DeliVeggie.GatewayAPI.Services.Implementation
     using EasyNetQ;
 
     /// <summary>
-    /// 
+    /// Price reduction message bus.
     /// </summary>
+    /// <seealso cref="IPriceReductionMessageBus" />
     public class PriceReductionMessageBus : IPriceReductionMessageBus
     {
         private readonly IBus messageBus;

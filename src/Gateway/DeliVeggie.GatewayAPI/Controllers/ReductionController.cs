@@ -11,6 +11,10 @@ namespace DeliVeggie.GatewayAPI.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
+    /// <summary>
+    /// Reduction controller.
+    /// </summary>
+    /// <seealso cref="ControllerBase" />
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/reductions")]
     [ApiController]

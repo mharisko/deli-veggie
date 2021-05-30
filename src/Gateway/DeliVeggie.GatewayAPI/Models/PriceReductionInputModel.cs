@@ -1,5 +1,8 @@
 ﻿namespace DeliVeggie.GatewayAPI.Models
 {
+    /// <summary>
+    /// Price reduction input model.
+    /// </summary>
     public class PriceReductionInputModel
     {
         /// <summary>
