@@ -49,6 +49,13 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-ui",
+            "type": "npm",
+            "script": "start",
+            "path": "${workspaceFolder}/src/Presentation/DeliVeggieUI",
+            "problemMatcher": []
         }
     ]
 }

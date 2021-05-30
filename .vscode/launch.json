@@ -7,8 +7,8 @@
         {
             "name": "Launch Chrome",
             "request": "launch",
-            "type": "pwa-chrome",
-            "url": "http://localhost:8080",
+            "preLaunchTask": "build-ui",
+            "url": "http://localhost:5072",
             "webRoot": "${workspaceFolder}/src/Presentation/DeliVeggieUI"
         },
         {
@@ -18,9 +18,12 @@
             "preLaunchTask": "build-service",
             "program": "${workspaceFolder}/src/Services/DeliVeggie.Product.Service/bin/Debug/netcoreapp3.1/DeliVeggie.Product.Service.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/src/Services/DeliVeggie.Product.Service",
             "stopAtEntry": false,
-            "console": "internalConsole"
+            "console": "internalConsole",
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
         },
         {
             "name": ".NET Core Launch (web)",
@@ -33,7 +36,7 @@
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+                "pattern": "\\bNow listening on:\\s+(http?://\\S+)"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -50,10 +53,11 @@
     ],
     "compounds": [
         {
-            "name": "Both Console & Web API",
+            "name": "Service, Gateway & UI",
             "configurations": [
                 ".NET Core Launch (console)",
-                ".NET Core Launch (web)"
+                ".NET Core Launch (web)",
+                "Launch Chrome"
             ]
         }
     ]
