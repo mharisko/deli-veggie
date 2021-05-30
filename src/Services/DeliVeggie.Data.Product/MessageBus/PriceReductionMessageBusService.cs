@@ -76,7 +76,7 @@ namespace DeliVeggie.Product.Service.Abstract.MessageBus
                             .Rpc
                             .RespondAsync<PriceReductionCreateRequestMessage, PriceReductionCreateResponseMessage>(async request =>
                             {
-                                var statusCode = 200;
+                                var statusCode = 204;
                                 try
                                 {
                                     if (request == null || !RequestValidationHelper.IsValid(request))

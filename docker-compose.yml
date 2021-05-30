@@ -16,9 +16,9 @@ services:
       - rabbitmq
     # networks:
     #   - deliveggie-network
-  deliveggie-data-service:
-    image: deliveggie-data-service
-    container_name: "deliveggie-data-service"
+  deliveggie-product-service:
+    image: deliveggie-product-service
+    container_name: "deliveggie-product-service"
     build:
       context: .
       dockerfile: src/Services/DeliVeggie.Data.Product/Dockerfile

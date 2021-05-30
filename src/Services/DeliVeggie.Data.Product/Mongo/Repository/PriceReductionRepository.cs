@@ -43,7 +43,7 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
             var update = Builders<PriceReductionMdo>.Update
                             .Set(x => x.DayOfWeek, priceReduction.DayOfWeek)
                             .Set(x => x.Reduction, priceReduction.Reduction)
-                            .Set(x => x.UpdatedDate, DateTime.Now);
+                            .Set(x => x.CreatedDate, DateTime.Now);
 
             await this.Collection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
         }

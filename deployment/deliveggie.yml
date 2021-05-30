@@ -81,7 +81,7 @@ spec:
         service: product-service
     spec:
       containers:
-        - name:  deliveggie-product-service
+        - name: deliveggie-product-service
           image: localhost:5000/deliveggie-gateway-api:latest
           resources:
             limits:
@@ -90,3 +90,63 @@ spec:
           ports:
             - containerPort: 80
               protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-ui
+  labels:
+    app: deliveggie-ui
+spec:
+  selector:
+    matchLabels:
+      service: product-ui
+  template:
+    metadata:
+      labels:
+        app: deliveggie-ui
+        service: product-ui
+    spec:
+      containers:
+      - name: product-ui
+        image: localhost:5000/deliveggie-product-ui:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-ui
+  labels:
+    app: deliveggie-ui
+    service: product-ui
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5070
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: product-ui
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: deliveggie-ui-ingress
+  labels:
+    name: deliveggie-ui-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway-api
+                port:
+                  number: 5070

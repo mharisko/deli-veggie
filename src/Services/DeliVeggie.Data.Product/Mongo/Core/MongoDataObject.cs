@@ -11,7 +11,6 @@ namespace DeliVeggie.Product.Service.Mongo.Core
         /// Gets or sets the Id of the Entity.
         /// </summary>
         /// <value>Id of the Entity.</value>
-
         [BsonRepresentation(BsonType.ObjectId)]
         [BsonIgnoreIfDefault]
         public virtual Tkey Id { get; set; }

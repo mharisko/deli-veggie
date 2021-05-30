@@ -17,7 +17,7 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:5061"
+                "ASPNETCORE_URLS": "http://localhost:5062"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
@@ -41,7 +41,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:4200",
+            "url": "http://localhost:5070",
             "webRoot": "${workspaceFolder}/src/Presentation/DeliVeggieUI"
         },
         {

@@ -2,7 +2,7 @@
   <p style="color: white"> Requesting... </p>
 </ngx-spinner>
 
-<div class="container">
+<div class="container-fluid">
   <div class="card mt-3 shadow rounded">
     <div class="card-header bg-transparent">
       <h4>Products</h4>
@@ -17,8 +17,8 @@
         </thead>
         <tbody *ngIf="products?.length != 0">
           <tr *ngFor="let product of products; let i = index">
-            <td>{{i}}</td>
-            <td><a [routerLink]="'/products/'+product.id" target="_blank"></a> {{ product.name }}</td>
+            <td>{{i+1}}</td>
+            <td><a [routerLink]="'/products/'+product.id" target="_blank">{{ product.name }}</a> </td>
           </tr>
         </tbody>
         <tbody *ngIf="products?.length == 0">

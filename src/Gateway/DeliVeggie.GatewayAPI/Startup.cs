@@ -26,6 +26,17 @@ namespace DeliVeggie.GatewayAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                    });
+            });
+
             services.AddControllers()
                .AddJsonOptions(options =>
                {
@@ -72,13 +83,6 @@ namespace DeliVeggie.GatewayAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(policy =>
-            {
-                policy.WithOrigins("http://localhost:5070")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-            });
-
             app.UseSwagger(options =>
             {
                 options.RouteTemplate = "swagger/{documentname}/swagger.json";
@@ -102,7 +106,7 @@ namespace DeliVeggie.GatewayAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

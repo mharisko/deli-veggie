@@ -2,15 +2,17 @@
   <p style="color: white"> Requesting... </p>
 </ngx-spinner>
 
+<div class="container-fluid d-flex justify-content-center">
 
-<div class="card mt-5" style="width: 18rem;" *ngIf="product">
-  <div class="card-header">
-    Product
-  </div>
-  <div class="card-body">
-    <div>Id: {{product.id}}</div>
-    <div>Name: {{product.name}}</div>
-    <div>Entry date: {{product.entryDate | date }}</div>
-    <div>Price: {{product.price | currency}}</div>
+  <div class="card mt-5" style="width: 45rem;" *ngIf="product">
+    <div class="card-header">
+      Product
+    </div>
+    <div class="card-body">
+      <div>Id: <b>{{product.id}}</b></div>
+      <div>Name: <b>{{product.name}}</b></div>
+      <div>Entry date: <b>{{product.entryDate | date }}</b></div>
+      <div>Price: <b>{{product.price | currency}}</b></div>
+    </div>
   </div>
 </div>

@@ -149,6 +149,7 @@ namespace DeliVeggie.GatewayAPI.Services.Implementation
         {
             return new ProductDto
             {
+                Id = response.Id,
                 EntryDate = response.EntryDate,
                 Name = response.Name,
                 Price = response.Price

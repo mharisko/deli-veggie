@@ -33,9 +33,7 @@ export class HttpService {
     let headers = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
+        'Accept': 'application/json'
       }),
       observe: 'response'
     };

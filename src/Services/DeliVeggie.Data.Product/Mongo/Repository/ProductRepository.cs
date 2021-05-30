@@ -26,6 +26,7 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
                 BsonClassMap.RegisterClassMap<ProductDto>(cm =>
                 {
                     cm.AutoMap();
+                    cm.MapIdMember(x => x.Id);
                     cm.MapProperty(x => x.EntryDate)
                       .SetElementName("CreatedDate");
                     cm.SetIgnoreExtraElements(true);
@@ -92,7 +93,13 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
                      .Eq(x => x.Id, productId);
             var options = new FindOptions<ProductMdo, ProductDto>
             {
-                Projection = Builders<ProductMdo>.Projection.As<ProductDto>()
+                Projection = Builders<ProductMdo>.Projection.Expression(x => new ProductDto
+                {
+                    Id = x.Id,
+                    EntryDate = x.CreatedDate,
+                    Name = x.Name,
+                    Price = x.Price
+                })
             };
 
             var documents = await this.Collection.FindAsync(filter, options);
@@ -111,7 +118,13 @@ namespace DeliVeggie.Product.Service.Mongo.Repository
             {
                 Skip = skip,
                 Limit = limit,
-                Projection = Builders<ProductMdo>.Projection.As<ProductDto>(),
+                Projection = Builders<ProductMdo>.Projection.Expression(x => new ProductDto
+                {
+                    Id = x.Id,
+                    EntryDate = x.CreatedDate,
+                    Name = x.Name,
+                    Price = x.Price
+                }),
                 Sort = Builders<ProductMdo>.Sort.Ascending(s => s.CreatedDate)
             };
 

@@ -70,7 +70,7 @@ namespace DeliVeggie.GatewayAPI.Controllers
         {
             try
             {
-                if (!string.IsNullOrEmpty(productId))
+                if (string.IsNullOrEmpty(productId))
                 {
                     return this.BadRequest(new { message = "Invalid product id." });
                 }
@@ -100,7 +100,7 @@ namespace DeliVeggie.GatewayAPI.Controllers
         {
             try
             {
-                if (!string.IsNullOrEmpty(productId))
+                if (string.IsNullOrEmpty(productId))
                 {
                     return this.BadRequest(new { message = "Invalid product id." });
                 }
@@ -205,7 +205,7 @@ namespace DeliVeggie.GatewayAPI.Controllers
         {
             try
             {
-                if (!string.IsNullOrEmpty(productId))
+                if (string.IsNullOrEmpty(productId))
                 {
                     return this.BadRequest(new { message = "Invalid product id." });
                 }
