@@ -3,35 +3,58 @@
 The solution contains below items
 
 1. WebApplication - Angular application to display product list and product details.
-    Contains 2 pages 
+    Contains 2 pages
+    
         1. product list page
         2. product details page
 
     Components:
-    1. product-list - to show product list.
-    2. product-details - to show product details.
-
-    services/api.service.ts
-        contains functions to call web api to fetch product list and product details.
     
-2. Gateway - Web api to get product details.
-    1. ProductController Contains 2 apis
-        1.1)  GetProducts (https://localhost:5001/product) - to get all products.
-        1.2) GetProductDetails (https://localhost:5001/product/{id}) - to get details of a product.
+        1. products - to show product list.
+        2. product - to show product details.
+
+    services/product.service.ts
+        contains functions to call web api to fetch products and product details.
     
-    2. Services/ProductService.cs
-        Service class to call product microservice to fetch product list and product details.
-    3. Models\ProductModel.cs - to hold product data.
+2. Gateway - Web api has endpoints execute CRUD operations on products & price reductions.
 
-3. Service.Product - Microservice to fetch product list and product details from db.
-    1. DbModels/ProductMdo - to hold product data
-    2. BL\ProductLogic - Business layer to fetch product data from DAL.
-    3. DAL\ProductRepository - Repository class to fetch product data from db.
+        1. Swagger Added to all the endpoints.
+        2. ProductsController Contains 6 endpoints
+    ![image](https://user-images.githubusercontent.com/20236391/120116850-cf817880-c1a7-11eb-8cae-9eed1a93a2d9.png)
+    
+        3. PriceReductionController contains 5 endpoints
+    ![image](https://user-images.githubusercontent.com/20236391/120116880-f770dc00-c1a7-11eb-9c34-182f0b5869d5.png)
+    
+        4. All the communications via abstract instead of concrete class.
+        5. Asp.net DI extension used to inject interfaces.
+        6. EasyMQ used to send/receive request & responsed from/to backend service.
+3. Service.Product - Microservice to manage all the CRUS operations for **products** & **price reductions**.
 
-4. Common  - This libraray contains models to pass product data from Gateway to Microservice.
-    1. ProductDto.cs - model to pass product data.
-    2. Messages\ProductRequest.cs - RabitMq communication model to pass input request
-    3. Messages\ProductResponse.cs - RabitMq communication model to pass output response.
+        1. Dotnet core hosted services used to manage requests comming to the service.
+        2. All the request are validated with data anotations.
+        3. All the communications via abstract instead of concrete class.
+        4. Domain layer added for business validations/calculations.
+        5. Respotory patterns used to communicate mongodb.
 
-Note: Used RabitMq for communication between Getway and Microservice.
+4. Common
+
+        1. All the methods are supported asynchrounous communications to avoid high usage to CPU/RAM.
+        2. Singletone patterns used on repository classess & hosted service classess.
+
+## Deployment
+-----------------------
+1. Docker compose file added to deploy the applications in docker swarm.
+
+     ![image](https://user-images.githubusercontent.com/20236391/120117126-54b95d00-c1a9-11eb-99ae-5c01d6067f92.png)
+     
+        Once docker compose file executed, mongodb,rabbitmq, gateway, serviceapp, 
+        angular ui app will be deployed in docker swarm.
+
+2. Kubernetes meta file added to deploy the kubernetes cluster.
+
+    ![image](https://user-images.githubusercontent.com/20236391/120117187-921dea80-c1a9-11eb-8cd4-3bf839c84507.png)
+    
+        Local registry used to push docker images for kubernetes.
+
+
 
